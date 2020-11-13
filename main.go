@@ -2,14 +2,18 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
-	"github.com/rahulg963/go-lang/models"
+	"github.com/rahulg963/go-lang/controllers"
 )
 
 // go run github.com/rahulg963/go-lang
 // go build github.com/rahulg963/go-lang
 func main() {
 	fmt.Println("Hello from a module, Gophers!")
+
+	controllers.RegisterControllers()
+	http.ListenAndServe(":3000", nil)
 	// variables()
 	// pointers1()
 	// pointers2()
@@ -18,12 +22,12 @@ func main() {
 	// collections()
 	// structExample()
 
-	u := models.User{
-		ID:        2,
-		FirstName: "Tricia",
-		LastName:  "McMillan",
-	}
-	fmt.Println(u)
+	// u := models.User{
+	// 	ID:        2,
+	// 	FirstName: "Tricia",
+	// 	LastName:  "McMillan",
+	// }
+	// fmt.Println(u)
 }
 
 func variables() {
