@@ -6,6 +6,8 @@ import (
 	"github.com/rahulg963/go-lang/models"
 )
 
+// go run github.com/rahulg963/go-lang
+// go build github.com/rahulg963/go-lang
 func main() {
 	fmt.Println("Hello from a module, Gophers!")
 	// variables()
