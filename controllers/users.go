@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -23,6 +24,7 @@ func (uc userController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		case http.MethodPost:
 			uc.post(w, r)
 		default:
+			fmt.Println("/users status Not implemented 501")
 			w.WriteHeader(http.StatusNotImplemented)
 		}
 	} else {
@@ -34,7 +36,7 @@ func (uc userController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusNotFound)
 		}
-
+		fmt.Println(id)
 		switch r.Method {
 		case http.MethodGet:
 			uc.get(id, w)
@@ -49,10 +51,12 @@ func (uc userController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *userController) getAll(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("getAll called")
 	encodeResponseAsJSON(models.GetUsers(), w)
 }
 
 func (uc *userController) get(id int, w http.ResponseWriter) {
+	fmt.Println("get called")
 	u, err := models.GetUserByID(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -62,6 +66,7 @@ func (uc *userController) get(id int, w http.ResponseWriter) {
 }
 
 func (uc *userController) post(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("post called")
 	u, err := uc.parseRequest(r)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -77,15 +82,21 @@ func (uc *userController) post(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *userController) put(id int, w http.ResponseWriter, r *http.Request) {
+	fmt.Println("put called")
 	u, err := uc.parseRequest(r)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Could not parse User Object"))
+		w.Write([]byte("Could not parse User object"))
 		return
 	}
-
 	if id != u.ID {
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("ID of submitted user must match ID in URL"))
+		return
+	}
+	u, err = models.UpdateUser(u)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 		return
 	}
@@ -93,6 +104,7 @@ func (uc *userController) put(id int, w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *userController) delete(id int, w http.ResponseWriter) {
+	fmt.Println("delete called")
 	err := models.RemoveUserById(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
