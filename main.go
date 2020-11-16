@@ -11,23 +11,23 @@ import (
 // go build github.com/rahulg963/go-lang
 func main() {
 	fmt.Println("Hello from a module, Gophers!")
+	startingWebServer()
+	// learningSyntax()
+}
 
+func startingWebServer() {
 	controllers.RegisterControllers()
 	http.ListenAndServe(":3000", nil)
-	// variables()
-	// pointers1()
-	// pointers2()
-	// constants()
-	// iotaOrConstantExpression()
-	// collections()
-	// structExample()
+}
 
-	// u := models.User{
-	// 	ID:        2,
-	// 	FirstName: "Tricia",
-	// 	LastName:  "McMillan",
-	// }
-	// fmt.Println(u)
+func learningSyntax() {
+	variables()
+	pointers1()
+	pointers2()
+	constants()
+	iotaOrConstantExpression()
+	collections()
+	structExample()
 }
 
 func variables() {
