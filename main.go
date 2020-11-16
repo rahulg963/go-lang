@@ -1,8 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"flag"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/rahulg963/go-lang/controllers"
 )
@@ -11,8 +16,36 @@ import (
 // go build github.com/rahulg963/go-lang
 func main() {
 	fmt.Println("Hello from a module, Gophers!")
-	startingWebServer()
+	logParser()
+	// startingWebServer()
 	// learningSyntax()
+}
+
+func logParser() {
+	// go run . -level INFO
+	// go run . -help
+	path := flag.String("path", "myapp.log", "Path to the log that should be analysed")
+	level := flag.String("level", "ERROR", "Log level to search for. Options are DEBUG, INFO, ERROR, and CRITICAL")
+
+	flag.Parse()
+
+	f, err := os.Open(*path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+
+	r := bufio.NewReader(f)
+	for {
+		s, err := r.ReadString('\n')
+		if err != nil {
+			break
+		}
+		if strings.Contains(s, *level) {
+			fmt.Println(s)
+		}
+	}
 }
 
 func startingWebServer() {
