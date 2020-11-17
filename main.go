@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/rahulg963/go-lang/concurrent"
 	"github.com/rahulg963/go-lang/controllers"
 )
 
@@ -16,8 +17,15 @@ import (
 // go build github.com/rahulg963/go-lang
 func main() {
 	fmt.Println("Hello from a module, Gophers!")
+	// concurrent testing
+	// concurrent.ConcurrentLearningWithoutGoRoutine()
+	// concurrent.ConcurrentLearningWithGoRoutine()
+
+	// channels
+	concurrent.ChannelsDemo()
+
 	// logParser()
-	startingWebServer()
+	// startingWebServer()
 	// learningSyntax()
 }
 
@@ -51,7 +59,10 @@ func logParser() {
 func startingWebServer() {
 	controllers.RegisterControllers()
 	fmt.Println("Web server starting")
-	http.ListenAndServe(":3000", nil)
+	err := http.ListenAndServe(":3000", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func learningSyntax() {
