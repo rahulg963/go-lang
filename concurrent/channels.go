@@ -11,12 +11,17 @@ func ChannelsDemo() {
 
 	wg.Add(2)
 	go func(ch chan int, wg *sync.WaitGroup) {
-		fmt.Println(<-ch)
+		for msg := range ch {
+			fmt.Println(msg)
+		}
 		wg.Done()
 	}(ch, wg)
 
 	go func(ch chan int, wg *sync.WaitGroup) {
-		ch <- 42
+		// ch <- 42
+		for i := 0; i < 10; i++ {
+			ch <- i
+		}
 		wg.Done()
 	}(ch, wg)
 

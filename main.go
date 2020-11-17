@@ -19,10 +19,10 @@ func main() {
 	fmt.Println("Hello from a module, Gophers!")
 	// concurrent testing
 	// concurrent.ConcurrentLearningWithoutGoRoutine()
-	// concurrent.ConcurrentLearningWithGoRoutine()
+	concurrent.ConcurrentLearningWithGoRoutine()
 
 	// channels
-	concurrent.ChannelsDemo()
+	// concurrent.ChannelsDemo()
 
 	// logParser()
 	// startingWebServer()
