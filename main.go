@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"database/sql"
 	"flag"
 	"fmt"
 	"log"
@@ -9,8 +10,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/rahulg963/go-lang/concurrent"
+	_ "github.com/lib/pq"
 	"github.com/rahulg963/go-lang/controllers"
+	"github.com/rahulg963/go-lang/middleware"
+	"github.com/rahulg963/go-lang/model"
 )
 
 // go run github.com/rahulg963/go-lang
@@ -19,14 +22,36 @@ func main() {
 	fmt.Println("Hello from a module, Gophers!")
 	// concurrent testing
 	// concurrent.ConcurrentLearningWithoutGoRoutine()
-	concurrent.ConcurrentLearningWithGoRoutine()
+	// concurrent.ConcurrentLearningWithGoRoutine()
 
 	// channels
 	// concurrent.ChannelsDemo()
 
 	// logParser()
-	// startingWebServer()
 	// learningSyntax()
+
+	// startingWebServer()
+	db := connectToDatabase()
+	defer db.Close()
+	result, err := model.Login("test@gmail.com", "123")
+	if err != nil {
+		fmt.Errorf("Error in retrieve query %v", err)
+	}
+	fmt.Print(result)
+}
+
+func connectToDatabase() *sql.DB {
+	db, err := sql.Open("postgres", "postgres://nnichlle:r8cFon2vgxkZ72Li5xGQJm55T21WwXrS@rajje.db.elephantsql.com:5432/nnichlle")
+	if err != nil {
+		log.Fatalln(fmt.Errorf("Unable to connect to database: %v", err))
+	}
+	err = db.Ping()
+	if err != nil {
+		fmt.Errorf("Unable to connect to database ping method: %v", err)
+	}
+
+	model.SetDatabase(db)
+	return db
 }
 
 func logParser() {
@@ -59,7 +84,14 @@ func logParser() {
 func startingWebServer() {
 	controllers.RegisterControllers()
 	fmt.Println("Web server starting")
-	err := http.ListenAndServe(":3000", nil)
+	// without middleware
+	// err := http.ListenAndServe(":3000", nil)
+
+	// with middleware
+	// err := http.ListenAndServe(":3000", new(middleware.GzipMiddleware))
+
+	// with timeout and middleware
+	err := http.ListenAndServe(":3000", &middleware.TimeoutMiddleware{new(middleware.GzipMiddleware)})
 	if err != nil {
 		log.Fatal(err)
 	}
