@@ -14,6 +14,7 @@ import (
 	"github.com/rahulg963/go-lang/controllers"
 	"github.com/rahulg963/go-lang/middleware"
 	"github.com/rahulg963/go-lang/model"
+	"github.com/rahulg963/go-lang/concurrent"
 )
 
 // go run github.com/rahulg963/go-lang
@@ -31,13 +32,16 @@ func main() {
 	// learningSyntax()
 
 	// startingWebServer()
-	db := connectToDatabase()
-	defer db.Close()
-	result, err := model.Login("test@gmail.com", "123")
-	if err != nil {
-		fmt.Errorf("Error in retrieve query %v", err)
-	}
-	fmt.Print(result)
+	//db := connectToDatabase()
+	//defer db.Close()
+	//result, err := model.Login("test@gmail.com", "123")
+	//if err != nil {
+	//	fmt.Errorf("Error in retrieve query %v", err)
+	//}
+	//fmt.Print(result)
+
+	// concurrency patterns
+	concurrent.TestGoConcurrencyPatterns()
 }
 
 func connectToDatabase() *sql.DB {

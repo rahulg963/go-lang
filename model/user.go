@@ -41,7 +41,7 @@ func Login(email, password string) (*User, error) {
 
 	// updating order
 	t := time.Now()
-	_, err := db.Exec(`
+	_, err = db.Exec(`
 		UPDATE public.user
 		SET lastlogin = $1
 		WHERE id = $2`, t, result.ID)
