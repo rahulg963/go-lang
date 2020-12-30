@@ -7,6 +7,7 @@ import (
 )
 
 func pattern1() {
+
 	// normal channels (not buffered) will block until there is a msg in channel,
 	//producer and consumer statements will block
 	c := make(chan string)
