@@ -11,10 +11,10 @@ import (
 	"strings"
 
 	_ "github.com/lib/pq"
+	"github.com/rahulg963/go-lang/concurrent"
 	"github.com/rahulg963/go-lang/controllers"
 	"github.com/rahulg963/go-lang/middleware"
 	"github.com/rahulg963/go-lang/model"
-	"github.com/rahulg963/go-lang/concurrent"
 )
 
 // go run github.com/rahulg963/go-lang
