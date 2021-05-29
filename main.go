@@ -5,13 +5,12 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"github.com/rahulg963/go-lang/darkSide"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 
-	_ "github.com/lib/pq"
-	"github.com/rahulg963/go-lang/concurrent"
 	"github.com/rahulg963/go-lang/controllers"
 	"github.com/rahulg963/go-lang/middleware"
 	"github.com/rahulg963/go-lang/model"
@@ -41,7 +40,10 @@ func main() {
 	//fmt.Print(result)
 
 	// concurrency patterns
-	concurrent.TestGoConcurrencyPatterns()
+	//concurrent.TestGoConcurrencyPatterns()
+
+	//dark side of go
+	darkSide.Func1()
 }
 
 func connectToDatabase() *sql.DB {
