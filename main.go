@@ -43,7 +43,7 @@ func main() {
 	//concurrent.TestGoConcurrencyPatterns()
 
 	//dark side of go
-	darkSide.Func1()
+	darkSide.DarkSide()
 }
 
 func connectToDatabase() *sql.DB {
