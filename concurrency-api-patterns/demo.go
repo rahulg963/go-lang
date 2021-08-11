@@ -4,7 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"strings"
+	"sync"
 )
 
 type Response struct {
@@ -28,7 +31,49 @@ type Result struct {
 }
 
 func GetResult() {
+	// getResult will stop immediately if the http.Request is canceled
+	var result Result
+	ctx := context.Background()
+	if err := <-getResult(ctx, &result); err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Success")
+	fmt.Println(result)
+}
 
+// getResult returns the result of many concurrent API calls
+func getResult(ctx context.Context, result *Result) <-chan error {
+	out := make(chan error)
+	go func() {
+		// Correct memory management
+		defer close(out)
+
+		// The cancel func will allow us to stop all pending requests if one
+		// fails
+		ctx, cancel := context.WithCancel(ctx)
+
+		// Merge allows us to recieve the all of errors returned from all of
+		// the calls to `getPieces` in a single `<-chan error`.
+		// If no errors are returned, Merge will wait until all of the
+		// `<-chan error`s close before proceeding
+		for err := range merge(
+			getResponse(ctx, 1, result.First),
+			getResponse(ctx, 2, result.Second),
+			getResponse(ctx, 3, result.Third),
+		) {
+			if err != nil {
+
+				// Cancel all pending requests
+				cancel()
+
+				// Surface the error to the caller
+				out <- err
+				return
+			}
+		}
+	}()
+	return out
 }
 
 func getResponse(ctx context.Context, id int, res *Response) <-chan error {
@@ -55,11 +100,48 @@ func getResponse(ctx context.Context, id int, res *Response) <-chan error {
 			out <- fmt.Errorf("%d %s", resp.StatusCode, resp.Status)
 		}
 
+		buf := new(strings.Builder)
 		defer resp.Body.Close()
-		if err := json.NewDecoder(resp.Body).Decode(res); err != nil {
+		if _, err := io.Copy(buf, resp.Body); err != nil {
+			out <- err
+			return
+		}
+
+		err = json.Unmarshal([]byte(buf.String()), &res)
+		if err != nil {
 			out <- err
 			return
 		}
 	}()
 	return out
+}
+
+// Merge fans multiple error channels in to a single error channel
+func merge(errChans ...<-chan error) <-chan error {
+	mergedChan := make(chan error)
+
+	// Create a WaitGroup that waits for all of the errChans to close
+	var wg sync.WaitGroup
+	wg.Add(len(errChans))
+	go func() {
+		// When all of the errChans are closed, close the mergedChan
+		wg.Wait()
+		close(mergedChan)
+	}()
+
+	for i := range errChans {
+		go func(errChan <-chan error) {
+			// Wait for each errChan to close
+			for err := range errChan {
+				if err != nil {
+					// Fan the contents of each errChan into the mergedChan
+					mergedChan <- err
+				}
+			}
+			// Tell the WaitGroup that one of the errChans is closed
+			wg.Done()
+		}(errChans[i])
+	}
+
+	return mergedChan
 }

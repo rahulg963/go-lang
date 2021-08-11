@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	"github.com/rahulg963/go-lang/darkSide"
+	concurrency_api_patterns "github.com/rahulg963/go-lang/concurrency-api-patterns"
 	"log"
 	"net/http"
 	"os"
@@ -43,7 +43,9 @@ func main() {
 	//concurrent.TestGoConcurrencyPatterns()
 
 	//dark side of go
-	darkSide.DarkSide()
+	//darkSide.DarkSide()
+
+	concurrency_api_patterns.GetResult()
 }
 
 func connectToDatabase() *sql.DB {
