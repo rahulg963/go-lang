@@ -32,7 +32,11 @@ type Result struct {
 
 func GetResult() {
 	// getResult will stop immediately if the http.Request is canceled
-	var result Result
+	result := Result{
+		First:  &Response{},
+		Second: &Response{},
+		Third:  &Response{},
+	}
 	ctx := context.Background()
 	if err := <-getResult(ctx, &result); err != nil {
 		fmt.Println(err)
@@ -45,6 +49,7 @@ func GetResult() {
 // getResult returns the result of many concurrent API calls
 func getResult(ctx context.Context, result *Result) <-chan error {
 	out := make(chan error)
+
 	go func() {
 		// Correct memory management
 		defer close(out)
@@ -107,7 +112,7 @@ func getResponse(ctx context.Context, id int, res *Response) <-chan error {
 			return
 		}
 
-		err = json.Unmarshal([]byte(buf.String()), &res)
+		err = json.Unmarshal([]byte(buf.String()), res)
 		if err != nil {
 			out <- err
 			return
