@@ -5,12 +5,12 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	concurrency_api_patterns "github.com/rahulg963/go-lang/concurrency-api-patterns"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 
+	"github.com/rahulg963/go-lang/concurrent-websocket"
 	"github.com/rahulg963/go-lang/controllers"
 	"github.com/rahulg963/go-lang/middleware"
 	"github.com/rahulg963/go-lang/model"
@@ -45,7 +45,9 @@ func main() {
 	//dark side of go
 	//darkSide.DarkSide()
 
-	concurrency_api_patterns.GetResult()
+	//concurrency_api_patterns.GetResult()
+
+	concurrent_websocket.SocketServerStart()
 }
 
 func connectToDatabase() *sql.DB {
