@@ -48,6 +48,10 @@ func main() {
 	//concurrency_api_patterns.GetResult()
 
 	concurrent_websocket.SocketServerStart()
+
+	go
+	}
+
 }
 
 func connectToDatabase() *sql.DB {
