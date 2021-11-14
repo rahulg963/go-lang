@@ -1,6 +1,7 @@
 package concurrent_websocket
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -19,4 +20,5 @@ func Pprof() {
 	if err := http.ListenAndServe("localhost:6060", nil); err != nil {
 		log.Fatalf("Pprof failed: %v", err)
 	}
+	fmt.Println("running pprof")
 }
